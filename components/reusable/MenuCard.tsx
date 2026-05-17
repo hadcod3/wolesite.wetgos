@@ -1,12 +1,10 @@
 'use client'
 
 import { IItem } from '@/lib/database/models/item.model'
-import { formatPrice } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { SquarePen } from 'lucide-react'
 import React from 'react'
-import { Button } from '../ui/button'
-import { useCartModal } from './CartModalContext' 
+import { useCartModal } from './CartModalContext'
 import Image from 'next/image'
 
 interface MenuCardProps {
@@ -24,40 +22,61 @@ const MenuCard = ({ data, editable }: MenuCardProps) => {
   }
 
   const handleClick = () => {
-    router.push(`/dashboard/menu/${data._id}`)
-  }
-
-  const handleAdd = () => {
-    openModal(data) 
+    if (editable) {
+      router.push(`/dashboard/menu/${data._id}`)
+    } else {
+      openModal(data)
+    }
   }
 
   return (
     <div
-      onClick={() => (editable ? handleClick() : handleAdd())}
-      key={data._id}
-      className="relative flex-auto w-40 max-w-48 aspect-7/8 overflow-hidden rounded-xl p-2 bg-zinc-100 hover:bg-zinc-200 transition-all"
+      onClick={handleClick}
+      className="p-2 flex rounded-lg aspect-22/7 h-fit w-fit cursor-pointer group"
     >
-      {editable && (
-        <Button
-          size="icon"
-          variant="ghost"
-          className="absolute top-3 right-3 z-50 bg-zinc-100/90 rounded-md"
-          onClick={handleEdit}
-        >
-          <SquarePen className="w-4 h-4 text-blue-700" />
-        </Button>
-      )}
+      <div className="relative min-w-28 w-28 min-h-28 h-28 flex p-2 aspect-square!">
+        <div
+          className="absolute inset-0 w-full h-full bg-zinc-100 -z-10 opacity-50"
+          style={{
+            backgroundImage: "url('/diagonal_lines.png')",
+            backgroundRepeat: 'repeat',
+            backgroundSize: '300px 300px',
+          }}
+        />
+        <Image
+          src={data.imgUrl}
+          alt={data.name}
+          width={2000}
+          height={4000}
+          className="w-full h-full object-cover bg-zinc-100 shadow-sm transition-opacity group-hover:opacity-90"
+        />
 
-      <Image
-        src={data.imgUrl}
-        alt="thumb-menu"
-        width={1000}
-        height={1000}
-        className="aspect-4/3 rounded-md object-center object-cover"
-      />
-      <div className="flex flex-col justify-between mt-2 gap-1">
-        <p className="text-md leading-5 line-clamp-1 text-zinc-700 capitalize">{data.name}</p>
-        <p className="text-lg font-semibold line-clamp-1 text-zinc-950">Rp {formatPrice(data.price)}</p>
+        {/* Edit button overlay */}
+        {editable && (
+          <button
+            onClick={handleEdit}
+            className="absolute top-1 right-1 z-10 p-1 bg-zinc-100/90 hover:bg-zinc-200 transition-colors shadow-sm"
+          >
+            <SquarePen className="w-3.5 h-3.5 text-blue-700" />
+          </button>
+        )}
+      </div>
+
+      {/* Info block */}
+      <div className="p-2 px-4 flex flex-col justify-between max-h-28 h-28 min-h-28 max-w-60 w-60 min-w-60 bg-zinc-50 shadow-sm group-hover:bg-zinc-100 transition-colors">
+        <div>
+          <h1 className="text-md font-semibold text-zinc-700 capitalize leading-tight">
+            {data.name}
+          </h1>
+          <p className="text-sm font-medium text-zinc-500 capitalize">
+            {data.category?.name || 'Uncategorized'}
+          </p>
+        </div>
+        <div className="flex items-end justify-between">
+          <h1 className="text-xl font-bold text-zinc-900">
+            Rp {data.price.toLocaleString()}
+          </h1>
+        </div>
       </div>
     </div>
   )

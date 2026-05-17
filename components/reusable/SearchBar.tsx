@@ -11,7 +11,7 @@ interface SearchBarProps {
   buttonVariant?: "default" | "ghost" | "outline" | "link";
   onSearch: (query: string, categoryId?: string) => void;
   defaultValue?: string;
-  selectedCategoryId?: string; // <-- new prop
+  selectedCategoryId?: string;
 }
 
 export function SearchBar({
@@ -42,14 +42,14 @@ export function SearchBar({
         placeholder={placeholder}
         value={searchQuery}
         onChange={(e) => setSearchQuery(e.target.value)}
-        className="rounded-xl rounded-r-none h-12 focus-visible:ring-0"
+        className="h-12 focus-visible:ring-0 text-2xl"
       />
       <Button
         type="submit"
         variant={buttonVariant}
-        className="rounded-l-none border-l-0 h-12 aspect-square"
+        className="h-12 aspect-square bg-green-700 hover:bg-green-800 cursor-pointer transition-colors duration-300 ease"
       >
-        <SearchIcon size={20} />
+        <SearchIcon size={20} className="stroke-zinc-50" />
       </Button>
     </form>
   );

@@ -1,14 +1,20 @@
+import { CartProvider } from "@/components/reusable/CartContext";
+import { CartModalProvider } from "@/components/reusable/CartModalContext";
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: Readonly<{   
   children: React.ReactNode;
 }>) {
     return (
-        <div 
-            className={``}
-        >
-            {children}
-        </div>
+          <CartProvider>
+            <CartModalProvider>
+                <div 
+                    className={``}
+                >
+                    {children}
+                </div>
+            </CartModalProvider>
+          </CartProvider>
     );
 }
